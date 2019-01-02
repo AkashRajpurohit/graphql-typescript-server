@@ -23,6 +23,9 @@ const mutation = (e: string, p: string) => `
 
 beforeAll(async () => {
   await createTypeormConnection();
+});
+
+afterAll(async () => {
   await deleteSchema(User);
 });
 
