@@ -22,6 +22,7 @@
   "author": "Akash Rajpurohit",
   "license": "MIT",
   "dependencies": {
+    "@gql2ts/from-schema": "1.10.1",
     "bcryptjs": "2.4.3",
     "graphql": "14.0.2",
     "graphql-import": "0.7.1",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node --files src/index.ts",
-    "test": "NODE_ENV=test TS_NODE_FILES=true jest --watch --detectOpenHandles --forceExit",
+    "test": "NODE_ENV=test TS_NODE_FILES=true jest --detectOpenHandles --forceExit",
     "gen-schema-types": "gql2ts src/schema.graphql -o src/types/schema.d.ts"
   },
   "jest": {

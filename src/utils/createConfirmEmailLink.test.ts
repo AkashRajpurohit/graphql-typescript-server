@@ -4,16 +4,21 @@ import { redis } from "../redis";
 import { createConfirmEmailLink } from "./createConfirmEmailLink";
 import { createTypeormConnection } from "./createTypeormConnection";
 import { User } from "../entity/User";
+import { deleteSchema } from "./deleteSchema";
 
 let userId: string;
 
 beforeAll(async () => {
   await createTypeormConnection();
   const user = await User.create({
-    email: "bobsad@bob.com",
+    email: "bob123@bob.com",
     password: "sdfsdfsfs"
   }).save();
   userId = user.id;
+});
+
+afterAll(async () => {
+  await deleteSchema(User);
 });
 
 test("make sure createConfirmEmailLink works", async () => {

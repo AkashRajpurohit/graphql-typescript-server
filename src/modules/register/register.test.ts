@@ -7,8 +7,9 @@ import {
   passwordNotLongEnough
 } from "./errorMessages";
 import { createTypeormConnection } from "../../utils/createTypeormConnection";
+import { deleteSchema } from "../../utils/deleteSchema";
 
-const email = "akash@gmail.com";
+const email = "akash121@gmail.com";
 const password = "b2dsdfsd";
 
 const mutation = (e: string, p: string) => `
@@ -22,6 +23,7 @@ const mutation = (e: string, p: string) => `
 
 beforeAll(async () => {
   await createTypeormConnection();
+  await deleteSchema(User);
 });
 
 describe("Register user", async () => {
