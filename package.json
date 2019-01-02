@@ -4,6 +4,8 @@
   "description": "graphql ts server boilerplate",
   "devDependencies": {
     "@types/bcryptjs": "2.4.2",
+    "@types/connect-redis": "0.0.8",
+    "@types/express-session": "1.15.11",
     "@types/ioredis": "4.0.4",
     "@types/jest": "23.3.11",
     "@types/node": "^10.12.18",
@@ -25,7 +27,9 @@
   "dependencies": {
     "@gql2ts/from-schema": "1.10.1",
     "bcryptjs": "2.4.3",
+    "connect-redis": "3.4.0",
     "dotenv": "6.2.0",
+    "express-session": "1.15.6",
     "graphql": "14.0.2",
     "graphql-import": "0.7.1",
     "graphql-request": "1.8.2",
