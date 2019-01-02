@@ -5,11 +5,13 @@ import { createConfirmEmailLink } from "./createConfirmEmailLink";
 import { createTypeormConnection } from "./createTypeormConnection";
 import { User } from "../entity/User";
 import { deleteSchema } from "./deleteSchema";
+import { Connection } from "typeorm";
 
 let userId: string;
+let conn: Connection;
 
 beforeAll(async () => {
-  await createTypeormConnection();
+  conn = await createTypeormConnection();
   const user = await User.create({
     email: "bob123@bob.com",
     password: "sdfsdfsfs"
@@ -19,6 +21,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await deleteSchema(User);
+  conn.close();
 });
 
 test("make sure createConfirmEmailLink works", async () => {

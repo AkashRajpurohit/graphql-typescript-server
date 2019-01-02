@@ -19,24 +19,23 @@ export const startServer = async () => {
     })
   });
 
-  server.express.use(
-    session({
-      store: new RedisStore({}),
-      name: "vid",
-      secret: "sdsdfservesfdsfdsfd",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
-      }
-    })
-  );
+  const sessionOptions = {
+    store: new RedisStore({}),
+    name: "vid",
+    secret: (process.env.SESSION_SECRET as string) || "fallbacksecretfortest",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+    }
+  };
+  server.express.use(session(sessionOptions));
 
   const cors = {
     credentials: true,
-    origin: "http://localhost:4000"
+    origin: process.env.NODE_ENV === "test" ? "*" : "http://localhost:4000"
   };
 
   server.express.get("/confirm/:id", confirmEmail);

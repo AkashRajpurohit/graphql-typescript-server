@@ -8,9 +8,12 @@ import {
 } from "./errorMessages";
 import { createTypeormConnection } from "../../utils/createTypeormConnection";
 import { deleteSchema } from "../../utils/deleteSchema";
+import { Connection } from "typeorm";
 
 const email = "akash121@gmail.com";
 const password = "b2dsdfsd";
+
+let conn: Connection;
 
 const mutation = (e: string, p: string) => `
   mutation{
@@ -22,11 +25,12 @@ const mutation = (e: string, p: string) => `
 `;
 
 beforeAll(async () => {
-  await createTypeormConnection();
+  conn = await createTypeormConnection();
 });
 
 afterAll(async () => {
   await deleteSchema(User);
+  conn.close();
 });
 
 describe("Register user", async () => {

@@ -3,9 +3,12 @@ import { invalidLogin, confirmEmailError } from "./errorMessages";
 import { User } from "../../entity/User";
 import { createTypeormConnection } from "../../utils/createTypeormConnection";
 import { deleteSchema } from "../../utils/deleteSchema";
+import { Connection } from "typeorm";
 
 const email = "akash121@gmail.com";
 const password = "b2dsdfsd";
+
+let conn: Connection;
 
 const registerMutation = (e: string, p: string) => `
   mutation{
@@ -26,11 +29,12 @@ const loginMutation = (e: string, p: string) => `
 `;
 
 beforeAll(async () => {
-  await createTypeormConnection();
+  conn = await createTypeormConnection();
 });
 
 afterAll(async () => {
   await deleteSchema(User);
+  conn.close();
 });
 
 const loginExpectError = async (e: string, p: string, errMsg: string) => {
