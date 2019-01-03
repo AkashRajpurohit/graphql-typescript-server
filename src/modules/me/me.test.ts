@@ -1,31 +1,13 @@
-import axios from "axios";
 import { Connection } from "typeorm";
 import { createTypeormConnection } from "../../utils/createTypeormConnection";
 import { User } from "../../entity/User";
 import { deleteSchema } from "../../utils/deleteSchema";
+import { TestClient } from "../../utils/TestClient";
 
 let conn: Connection;
 const email = "bob123@bob.com";
 const password = "sdfsdfsfs";
 let userId: string;
-
-const loginMutation = (e: string, p: string) => `
-  mutation{
-    login(email: "${e}", password: "${p}") {
-      path
-      message
-    }
-  }
-`;
-
-const meQuery = `
-  {
-    me {
-      id
-      email
-    }
-  }
-`;
 
 beforeAll(async () => {
   conn = await createTypeormConnection();
@@ -43,36 +25,19 @@ afterAll(async () => {
 });
 
 describe("me query", () => {
+  const client = new TestClient(process.env.TEST_HOST as string);
   test("return null if no cookie", async () => {
-    const response = await axios.post(process.env.TEST_HOST as string, {
-      query: meQuery
-    });
+    const response = await client.me();
 
-    expect(response.data.data.me).toBeNull();
+    expect(response.data.me).toBeNull();
   });
 
   test("get current user", async () => {
-    await axios.post(
-      process.env.TEST_HOST as string,
-      {
-        query: loginMutation(email, password)
-      },
-      {
-        withCredentials: true
-      }
-    );
+    await client.login(email, password);
 
-    const response = await axios.post(
-      process.env.TEST_HOST as string,
-      {
-        query: meQuery
-      },
-      {
-        withCredentials: true
-      }
-    );
+    const response = await client.me();
 
-    expect(response.data.data).toEqual({
+    expect(response.data).toEqual({
       me: {
         id: userId,
         email

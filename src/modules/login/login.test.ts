@@ -1,32 +1,14 @@
-import { request } from "graphql-request";
 import { invalidLogin, confirmEmailError } from "./errorMessages";
 import { User } from "../../entity/User";
 import { createTypeormConnection } from "../../utils/createTypeormConnection";
 import { deleteSchema } from "../../utils/deleteSchema";
 import { Connection } from "typeorm";
+import { TestClient } from "../../utils/TestClient";
 
 const email = "akash121@gmail.com";
 const password = "b2dsdfsd";
 
 let conn: Connection;
-
-const registerMutation = (e: string, p: string) => `
-  mutation{
-    register(email: "${e}", password: "${p}") {
-      path
-      message
-    }
-  }
-`;
-
-const loginMutation = (e: string, p: string) => `
-  mutation{
-    login(email: "${e}", password: "${p}") {
-      path
-      message
-    }
-  }
-`;
 
 beforeAll(async () => {
   conn = await createTypeormConnection();
@@ -37,13 +19,16 @@ afterAll(async () => {
   conn.close();
 });
 
-const loginExpectError = async (e: string, p: string, errMsg: string) => {
-  const response = await request(
-    process.env.TEST_HOST as string,
-    loginMutation(e, p)
-  );
+const client = new TestClient(process.env.TEST_HOST as string);
 
-  expect(response).toEqual({
+const loginExpectError = async (
+  email: string,
+  password: string,
+  errMsg: string
+) => {
+  const response = await client.login(email, password);
+
+  expect(response.data).toEqual({
     login: [
       {
         path: "email",
@@ -59,10 +44,7 @@ describe("login", () => {
   });
 
   test("email not confirmed", async () => {
-    await request(
-      process.env.TEST_HOST as string,
-      registerMutation(email, password)
-    );
+    await client.register(email, password);
 
     await loginExpectError(email, password, confirmEmailError);
 
@@ -72,11 +54,8 @@ describe("login", () => {
   });
 
   test("Login the registered and confirmed user", async () => {
-    const response = await request(
-      process.env.TEST_HOST as string,
-      loginMutation(email, password)
-    );
+    const response = await client.login(email, password);
 
-    expect(response).toEqual({ login: null });
+    expect(response.data).toEqual({ login: null });
   });
 });
