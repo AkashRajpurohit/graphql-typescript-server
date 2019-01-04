@@ -11,10 +11,10 @@ import { Connection } from "typeorm";
 import { TestClient } from "../../../utils/TestClient";
 import { createTestConn } from "../../../testUtils/createTestConn";
 
+let conn: Connection;
+faker.seed(Date.now() + 6);
 const email = faker.internet.email();
 const password = faker.internet.password();
-
-let conn: Connection;
 
 beforeAll(async () => {
   conn = await createTestConn();

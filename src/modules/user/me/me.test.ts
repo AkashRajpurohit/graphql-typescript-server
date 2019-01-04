@@ -1,3 +1,4 @@
+import * as faker from "faker";
 import { Connection } from "typeorm";
 import { User } from "../../../entity/User";
 import { deleteSchema } from "../../../utils/deleteSchema";
@@ -5,8 +6,9 @@ import { TestClient } from "../../../utils/TestClient";
 import { createTestConn } from "../../../testUtils/createTestConn";
 
 let conn: Connection;
-const email = "bob123@bob.com";
-const password = "sdfsdfsfs";
+faker.seed(Date.now() + 4);
+const email = faker.internet.email();
+const password = faker.internet.password();
 let userId: string;
 
 beforeAll(async () => {

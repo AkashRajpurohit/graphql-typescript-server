@@ -13,6 +13,7 @@ import { expiredKeyError } from "./errorMessages";
 import { createTestConn } from "../../../testUtils/createTestConn";
 
 let conn: Connection;
+faker.seed(Date.now() + 1);
 const email = faker.internet.email();
 const password = faker.internet.password();
 const newPassword = faker.internet.password();
