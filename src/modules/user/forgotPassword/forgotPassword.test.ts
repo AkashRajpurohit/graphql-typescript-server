@@ -1,16 +1,16 @@
 import * as faker from "faker";
 
 import { Connection } from "typeorm";
-import { User } from "../../entity/User";
-import { deleteSchema } from "../../utils/deleteSchema";
-import { TestClient } from "../../utils/TestClient";
-import { createForgotPasswordLink } from "../../utils/createForgotPasswordLink";
-import { redis } from "../../redis";
-import { forgotPasswordLockAccount } from "../../utils/forgotPasswordLockAccount";
+import { User } from "../../../entity/User";
+import { deleteSchema } from "../../../utils/deleteSchema";
+import { TestClient } from "../../../utils/TestClient";
+import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLink";
+import { redis } from "../../../redis";
+import { forgotPasswordLockAccount } from "../../../utils/forgotPasswordLockAccount";
 import { forgotPasswordLockedError } from "../login/errorMessages";
 import { passwordNotLongEnough } from "../register/errorMessages";
 import { expiredKeyError } from "./errorMessages";
-import { createTestConn } from "../../testUtils/createTestConn";
+import { createTestConn } from "../../../testUtils/createTestConn";
 
 let conn: Connection;
 const email = faker.internet.email();

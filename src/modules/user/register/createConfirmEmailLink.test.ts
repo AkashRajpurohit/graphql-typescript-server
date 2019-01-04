@@ -2,10 +2,10 @@ import fetch from "node-fetch";
 
 import { createConfirmEmailLink } from "./createConfirmEmailLink";
 import { Connection } from "typeorm";
-import { createTestConn } from "../../testUtils/createTestConn";
-import { User } from "../../entity/User";
-import { deleteSchema } from "../../utils/deleteSchema";
-import { redis } from "../../redis";
+import { createTestConn } from "../../../testUtils/createTestConn";
+import { User } from "../../../entity/User";
+import { deleteSchema } from "../../../utils/deleteSchema";
+import { redis } from "../../../redis";
 
 let userId: string;
 let conn: Connection;
