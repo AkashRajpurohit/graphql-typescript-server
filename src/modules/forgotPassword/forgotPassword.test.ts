@@ -1,5 +1,6 @@
+import * as faker from "faker";
+
 import { Connection } from "typeorm";
-import { createTypeormConnection } from "../../utils/createTypeormConnection";
 import { User } from "../../entity/User";
 import { deleteSchema } from "../../utils/deleteSchema";
 import { TestClient } from "../../utils/TestClient";
@@ -9,15 +10,16 @@ import { forgotPasswordLockAccount } from "../../utils/forgotPasswordLockAccount
 import { forgotPasswordLockedError } from "../login/errorMessages";
 import { passwordNotLongEnough } from "../register/errorMessages";
 import { expiredKeyError } from "./errorMessages";
+import { createTestConn } from "../../testUtils/createTestConn";
 
 let conn: Connection;
-const email = "bob123@bob.com";
-const password = "sdfsdfsfs";
-const newPassword = "qwqwqieouqivdkjs";
+const email = faker.internet.email();
+const password = faker.internet.password();
+const newPassword = faker.internet.password();
 let userId: string;
 
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConn();
   const user = await User.create({
     email,
     password,
@@ -71,18 +73,18 @@ describe("forgot password", () => {
     });
 
     // make sure redis key expires after password change
-    expect(await client.forgotPasswordChange("ssdfsddgdsdsgdfgd", key)).toEqual(
-      {
-        data: {
-          forgotPasswordChange: [
-            {
-              path: "key",
-              message: expiredKeyError
-            }
-          ]
-        }
+    expect(
+      await client.forgotPasswordChange(faker.internet.password(), key)
+    ).toEqual({
+      data: {
+        forgotPasswordChange: [
+          {
+            path: "key",
+            message: expiredKeyError
+          }
+        ]
       }
-    );
+    });
 
     // able to login with new password
     expect(await client.login(email, newPassword)).toEqual({

@@ -1,17 +1,17 @@
 import fetch from "node-fetch";
-import { redis } from "../redis";
 
 import { createConfirmEmailLink } from "./createConfirmEmailLink";
-import { createTypeormConnection } from "./createTypeormConnection";
-import { User } from "../entity/User";
-import { deleteSchema } from "./deleteSchema";
 import { Connection } from "typeorm";
+import { createTestConn } from "../../testUtils/createTestConn";
+import { User } from "../../entity/User";
+import { deleteSchema } from "../../utils/deleteSchema";
+import { redis } from "../../redis";
 
 let userId: string;
 let conn: Connection;
 
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConn();
   const user = await User.create({
     email: "bob123@bob.com",
     password: "sdfsdfsfs"

@@ -1,3 +1,4 @@
+import * as faker from "faker";
 import { User } from "../../entity/User";
 import {
   duplicateEmail,
@@ -5,18 +6,18 @@ import {
   invalidEmail,
   passwordNotLongEnough
 } from "./errorMessages";
-import { createTypeormConnection } from "../../utils/createTypeormConnection";
 import { deleteSchema } from "../../utils/deleteSchema";
 import { Connection } from "typeorm";
 import { TestClient } from "../../utils/TestClient";
+import { createTestConn } from "../../testUtils/createTestConn";
 
-const email = "akash121@gmail.com";
-const password = "b2dsdfsd";
+const email = faker.internet.email();
+const password = faker.internet.password();
 
 let conn: Connection;
 
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConn();
 });
 
 afterAll(async () => {
@@ -64,7 +65,7 @@ describe("Register user", async () => {
   });
 
   it("catch bad password", async () => {
-    const response4: any = await client.register(email, "sd");
+    const response4: any = await client.register(faker.internet.email(), "sd");
     expect(response4.data).toEqual({
       register: [
         {
