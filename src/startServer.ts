@@ -3,7 +3,8 @@ import "dotenv/config";
 import { GraphQLServer } from "graphql-yoga";
 import * as session from "express-session";
 import * as connectRedis from "connect-redis";
-
+import * as RateLimit from "express-rate-limit";
+import * as RateLimitRedisStore from "rate-limit-redis";
 import { createTypeormConnection } from "./utils/createTypeormConnection";
 import { redis } from "./redis";
 import { confirmEmail } from "./routes/confirmEmail";
@@ -37,7 +38,18 @@ export const startServer = async () => {
       maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
     }
   };
+
   server.express.use(session(sessionOptions));
+
+  server.express.use(
+    new RateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // 100 req each IP per windowMS
+      store: new RateLimitRedisStore({
+        client: redis
+      })
+    })
+  );
 
   const cors = {
     credentials: true,
